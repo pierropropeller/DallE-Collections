@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CatGPT Dynamic Gallery</title>
+    <title>Random CatGPT Gallery</title>
     <style>
-        /* Default (Light Mode) */
+        /* Light Mode Default */
         body {
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f4; /* Light background */
+            background-color: #f4f4f4;
             transition: background-color 0.3s ease-in-out;
         }
         img {
@@ -23,10 +23,10 @@
             cursor: pointer;
         }
 
-        /* Dark Mode Detection */
+        /* Dark Mode Support */
         @media (prefers-color-scheme: dark) {
             body {
-                background-color: #121212; /* Dark mode background */
+                background-color: #121212;
             }
         }
     </style>
@@ -45,7 +45,15 @@
             images = data.filter(file => file.name.match(/\.(png|jpg|jpeg|webp|gif)$/i)).map(file => file.download_url);
 
             if (images.length > 0) {
-                updateImage(); 
+                shuffleImages(); // Randomize order
+                updateImage(); // Show first random image
+            }
+        }
+
+        function shuffleImages() {
+            for (let i = images.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [images[i], images[j]] = [images[j], images[i]]; // Swap elements randomly
             }
         }
 
@@ -54,7 +62,7 @@
             index = (index + 1) % images.length;
         }
 
-        fetchImages(); 
+        fetchImages();
     </script>
 </body>
 </html>
