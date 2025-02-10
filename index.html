@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tap to Swap</title>
+    <title>CatGPT Dynamic Gallery</title>
     <style>
         body {
             margin: 0;
@@ -14,8 +14,9 @@
             background-color: #f4f4f4;
         }
         img {
-            max-width: 100%;
-            height: auto;
+            width: 100%;
+            height: 100vh;
+            object-fit: contain;
             display: block;
             cursor: pointer;
         }
@@ -25,19 +26,26 @@
     <img id="catgpt-img" src="" alt="CatGPT" onclick="updateImage()">
     
     <script>
-        const images = [
-            "CATGPT.webp",
-            "my-notion-face-transparent.png",
-            //"another-image.webp"
-        ];
+        const repoURL = "https://api.github.com/repos/pierropropeller/DallE-Collections/contents/images"; // Change if using another folder
+        let images = [];
         let index = 0;
 
-        function updateImage() {
-            index = (index + 1) % images.length;
-            document.getElementById("catgpt-img").src = `https://raw.githubusercontent.com/pierropropeller/DallE-Collections/main/${images[index]}`;
+        async function fetchImages() {
+            const response = await fetch(repoURL);
+            const data = await response.json();
+            images = data.filter(file => file.name.match(/\.(png|jpg|jpeg|webp|gif)$/i)).map(file => file.download_url);
+
+            if (images.length > 0) {
+                updateImage(); // Display first image
+            }
         }
 
-        updateImage(); // Show the first image on load
+        function updateImage() {
+            document.getElementById("catgpt-img").src = images[index];
+            index = (index + 1) % images.length;
+        }
+
+        fetchImages(); // Auto-fetch images from GitHub on load
     </script>
 </body>
 </html>
