@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CatGPT Dynamic Gallery</title>
     <style>
+        /* Default (Light Mode) */
         body {
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
+            background-color: #f4f4f4; /* Light background */
+            transition: background-color 0.3s ease-in-out;
         }
         img {
             width: 100%;
@@ -20,13 +22,20 @@
             display: block;
             cursor: pointer;
         }
+
+        /* Dark Mode Detection */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #121212; /* Dark mode background */
+            }
+        }
     </style>
 </head>
 <body>
     <img id="catgpt-img" src="" alt="CatGPT" onclick="updateImage()">
     
     <script>
-        const repoURL = "https://api.github.com/repos/pierropropeller/DallE-Collections/contents/images"; // Change if using another folder
+        const repoURL = "https://api.github.com/repos/pierropropeller/DallE-Collections/contents/images"; 
         let images = [];
         let index = 0;
 
@@ -36,7 +45,7 @@
             images = data.filter(file => file.name.match(/\.(png|jpg|jpeg|webp|gif)$/i)).map(file => file.download_url);
 
             if (images.length > 0) {
-                updateImage(); // Display first image
+                updateImage(); 
             }
         }
 
@@ -45,7 +54,7 @@
             index = (index + 1) % images.length;
         }
 
-        fetchImages(); // Auto-fetch images from GitHub on load
+        fetchImages(); 
     </script>
 </body>
 </html>
