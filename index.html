@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CatGPT</title>
+    <title>Tap to Swap</title>
     <style>
         body {
             margin: 0;
@@ -17,10 +17,27 @@
             max-width: 100%;
             height: auto;
             display: block;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <img src="https://raw.githubusercontent.com/pierropropeller/DallE-Collections/refs/heads/main/CATGPT.webp" alt="CatGPT">
+    <img id="catgpt-img" src="" alt="CatGPT" onclick="updateImage()">
+    
+    <script>
+        const images = [
+            "CATGPT.webp",
+            "my-notion-face-transparent.png",
+            //"another-image.webp"
+        ];
+        let index = 0;
+
+        function updateImage() {
+            index = (index + 1) % images.length;
+            document.getElementById("catgpt-img").src = `https://raw.githubusercontent.com/pierropropeller/DallE-Collections/main/${images[index]}`;
+        }
+
+        updateImage(); // Show the first image on load
+    </script>
 </body>
 </html>
