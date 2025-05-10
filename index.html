@@ -1,68 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random CatGPT Gallery</title>
-    <style>
-        /* Light Mode Default */
-        body {
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-            transition: background-color 0.3s ease-in-out;
-        }
-        img {
-            width: 100%;
-            height: 100vh;
-            object-fit: contain;
-            display: block;
-            cursor: pointer;
-        }
-
-        /* Dark Mode Support */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #121212;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Random CatGPT Gallery</title>
+  <style>
+    body { margin:0; display:flex; justify-content:center; align-items:center; height:100vh;
+           background:#f4f4f4; transition:background 0.3s;}
+    img  { width:100%; height:100vh; object-fit:contain; cursor:pointer; }
+    @media (prefers-color-scheme:dark){ body{background:#121212;} }
+  </style>
 </head>
 <body>
-    <img id="catgpt-img" src="" alt="CatGPT" onclick="updateImage()">
-    
-    <script>
-        const repoURL = "https://api.github.com/repos/pierropropeller/DallE-Collections/contents/images"; 
-        let images = [];
-        let index = 0;
+  <img id="catgpt-img" src="" alt="CatGPT" onclick="nextImage()">
+  <script>
+    const treeURL = "https://api.github.com/repos/pierropropeller/DallE-Collections/git/trees/main?recursive=1";
+    let images = [], idx = 0;
 
-        async function fetchImages() {
-            const response = await fetch(repoURL);
-            const data = await response.json();
-            images = data.filter(file => file.name.match(/\.(png|jpg|jpeg|webp|gif)$/i)).map(file => file.download_url);
+    async function fetchImages() {
+      const resp = await fetch(treeURL);
+      const { tree } = await resp.json();
+      images = tree
+        .filter(f => f.type === "blob" && f.path.startsWith("images/") &&
+           /\.(png|jpe?g|webp|gif)$/i.test(f.path))
+        .map(f => `https://raw.githubusercontent.com/pierropropeller/DallE-Collections/main/${f.path}`);
+      if (!images.length) return console.error("No images found!");
+      shuffle(images);
+      nextImage();
+    }
 
-            if (images.length > 0) {
-                shuffleImages(); // Randomize order
-                updateImage(); // Show first random image
-            }
-        }
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
 
-        function shuffleImages() {
-            for (let i = images.length - 1; i > 0; i--) {
-                let j = Math.floor(Math.random() * (i + 1));
-                [images[i], images[j]] = [images[j], images[i]]; // Swap elements randomly
-            }
-        }
+    function nextImage() {
+      document.getElementById("catgpt-img").src = images[idx];
+      idx = (idx + 1) % images.length;
+    }
 
-        function updateImage() {
-            document.getElementById("catgpt-img").src = images[index];
-            index = (index + 1) % images.length;
-        }
-
-        fetchImages();
-    </script>
+    fetchImages();
+  </script>
 </body>
 </html>
