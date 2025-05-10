@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Random CatGPT Gallery</title>
+  <title>Random ChatGPT Gallery</title>
   <style>
     body { margin:0; display:flex; justify-content:center; align-items:center; height:100vh;
            background:#f4f4f4; transition:background 0.3s;}
@@ -12,7 +12,7 @@
   </style>
 </head>
 <body>
-  <img id="catgpt-img" src="" alt="CatGPT" onclick="nextImage()">
+  <img id="chatgpt-img" src="" alt="ChatGPT" onclick="nextImage()">
   <script>
     const treeURL = "https://api.github.com/repos/pierropropeller/DallE-Collections/git/trees/main?recursive=1";
     let images = [], idx = 0;
@@ -37,7 +37,7 @@
     }
 
     function nextImage() {
-      document.getElementById("catgpt-img").src = images[idx];
+      document.getElementById("chatgpt-img").src = images[idx];
       idx = (idx + 1) % images.length;
     }
 
